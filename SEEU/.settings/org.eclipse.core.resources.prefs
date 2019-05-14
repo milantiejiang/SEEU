@@ -1,0 +1,8 @@
+eclipse.preferences.version=1
+encoding//WebRoot/WEB-INF/jsp/system/index/head.jsp=UTF-8
+encoding//resources/dbconfig.properties=UTF-8
+encoding//resources/dbfh.properties=UTF-8
+encoding//src/com/fh/controller/app/appuser/IntAppuserController.java=UTF-8
+encoding//src/com/fh/controller/app/collection/CollectionController.java=UTF-8
+encoding//src/com/fh/controller/app/comment/CommentController.java=UTF-8
+encoding/<project>=UTF-8

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ShareMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		<!-- SYS_SHARE -->
+		sys_share
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		USER,	
+		SHARE_TYPE,	
+		TITLE,	
+		SHARE_DESCRIBE,	
+		IMAGE,	
+		TIME,	
+		SHARE_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{USER},	
+		#{SHARE_TYPE},	
+		#{TITLE},	
+		#{SHARE_DESCRIBE},	
+		#{IMAGE},	
+		#{TIME},	
+		#{SHARE_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			SHARE_ID = #{SHARE_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			USER = #{USER},
+			SHARE_TYPE = #{SHARE_TYPE},
+			TITLE = #{TITLE},
+			SHARE_DESCRIBE = #{SHARE_DESCRIBE},
+			IMAGE = #{IMAGE},
+			TIME = #{TIME},
+		SHARE_ID = SHARE_ID
+		where 
+		SHARE_ID = #{SHARE_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>s
+		where 
+			SHARE_ID = #{SHARE_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>s
+		where 1=1
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and USER = #{pd.keywords}
+		</if>
+		order by s.TIME desc
+	</select>
+	<!-- 根据条件查找列表 -->
+	<select id="searchlistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>s
+		where 1=1
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+		and
+			(
+				SHARE_DESCRIBE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')	
+			)
+		</if>
+		order by s.TIME desc
+	</select>
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	<!-- 我的列表(全部) -->
+	<select id="mylistAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			USER = #{USER}
+		
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			SHARE_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 获取总数 -->
+	<select id="getShareCount" parameterType="String" resultType="pd">
+		select 
+			count(SHARE_ID) shareCount
+		from 
+		<include refid="tableName"></include>
+	</select>
+	<!-- 获取我的分享列表总数 -->
+	<select id="getMyShareCount" parameterType="pd" resultType="pd">
+		select 
+			count(SHARE_ID) shareCount
+		from 
+		<include refid="tableName"></include>
+		where 
+			USER = #{USER}
+	</select>
+	<!-- 根据条件查找分享列表总数 -->
+	<select id="getSearchShareCount" parameterType="pd" resultType="pd">
+		select 
+			count(SHARE_ID) shareCount
+		from 
+		<include refid="tableName"></include>
+		where 1=1
+		and
+			(
+				SHARE_DESCRIBE LIKE CONCAT(CONCAT('%', #{keywords}),'%')	
+			)
+	</select>
+	<!-- fh313596790qq(青苔) -->
+</mapper>
